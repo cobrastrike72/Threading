@@ -161,7 +161,7 @@ namespace ThreadingWinFormsApp
 
         Efficiency
 
-        Task: ✅ Reuses threads from the ThreadPool — lightweight
+        Task: ✅ Reuses threads from the ThreadPool — lightweight (every thread in the thread pool is a background thread)
 
         Thread: ❌ Creates a new OS thread — heavier on resources
 

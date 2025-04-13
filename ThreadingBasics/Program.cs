@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Threading;
 
 namespace Threading;
 
@@ -46,6 +47,10 @@ internal class Program
 
         #region Background Threads
 
+        //Background threads mean:
+        //→ They don't keep the application alive.
+        //→ If the main(foreground) thread exits, background threads are automatically killed.
+
         //Stopwatch sw = Stopwatch.StartNew();
         //Console.WriteLine("Main thread start!");
         //Console.WriteLine($"Thread Id in main: {Thread.CurrentThread.ManagedThreadId} <::::> Is a backgorund Thread: {Thread.CurrentThread.IsBackground}");
@@ -56,7 +61,8 @@ internal class Program
 
         //th1.Start(); // so here the main thread will start other two threads and make them run and continue his work like which is Console.WriteLine("Main End!"); and the rest of lines and won't wait for thread one or two to finish in order to continue his work
         //// but a slight note here since thread one and two are <background threads>
-        //// the main thread will end end after finishing his work and the other two threads also will end accordingly even if thier work weren't finished yet
+        //// the main thread will end after finishing his work and the other two threads also will end accordingly even if thier work weren't finished yet
+        //// if you don't want them to end unless they finish thier work too or if the main thread depend on them in its work use <.join()> in the example below you will understand
         //th2.Start();
 
         //Console.WriteLine("Main End!");
@@ -66,7 +72,10 @@ internal class Program
 
         #endregion
 
-        #region join to wait for other threads to finish their work before the main thread continues his work
+        #region join to wait for other threads to finish their work before the main thread continues its work
+
+        // use .join() if the current thread(main thread) depeneds on them in its work or (if the thread is a background thread and you want thier work to be completed even if the main thread finishs his work before them
+
         Stopwatch sw = Stopwatch.StartNew();
         Console.WriteLine("Main thread start!");
         Console.WriteLine($"Thread Id in main: {Thread.CurrentThread.ManagedThreadId}");
@@ -79,9 +88,11 @@ internal class Program
         th2.Start();
         Console.WriteLine("Main End!");
         th1.Join(); // will block the main thread --> Synchronous waiting (blocking) // if the main thread was doing anything else beside the flow of the lines of code in the main method here 
-        // the main thread won't be able to continue it because it will be blocked 
+        // the main thread won't be able to continue it because it will be blocked till th1 finishes its work
 
-        th2.Join();
+        th2.Join(); // same as th1
+
+        //after th1 and th2 finish thier work main thread will continue its work below
         sw.Stop();
 
         Console.WriteLine($"Total time consumed: {sw.ElapsedMilliseconds}"); // will only consume 3 seconds (which is the maximum time of times consumed by anythread)
